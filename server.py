@@ -57,21 +57,23 @@ def handle_client(client_socket, player):
                         if letter == guess:
                             display_word[i] = guess
                     if "_" not in display_word:
-                        notify_clients(f"The word was: {word}. Player2 wins!")
+                        notify_clients(f"Word: {' '.join(display_word)} | Attempts left: {attempts_left} | Guessed letters: {', '.join(guessed_letters)}", include_player2=True)
+                        notify_clients(f"The word was: {word}. Player2 wins!", include_player2=True)
                         break
                 else:
                     attempts_left -= 1
                     if attempts_left == 0:
-                        notify_clients(f"No attempts left. The word was: {word}. Player1 wins!")
+                        notify_clients(f"Word: {' '.join(display_word)} | Attempts left: {attempts_left} | Guessed letters: {', '.join(guessed_letters)}", include_player2=True)
+                        notify_clients(f"No attempts left. The word was: {word}. Player1 wins!", include_player2=True)
                         break
 
                 notify_clients(f"Word: {' '.join(display_word)} | Attempts left: {attempts_left} | Guessed letters: {', '.join(guessed_letters)}")
     
     client_socket.close()
 
-def notify_clients(message):
+def notify_clients(message, include_player2=False):
     """Function to notify all clients with a message."""
-    for client in clients.values():
+    for player, client in clients.items():
         client.send((message + "\n").encode())
 
 # Set up the server
