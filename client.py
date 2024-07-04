@@ -33,16 +33,16 @@ class HangmanClient:
         self.attempts_label.grid(row=5, column=0, columnspan=3, pady=5, sticky="nsew")
 
         self.entry = tk.Entry(self.master, font=("Helvetica", 14))
-        self.entry.grid(row=6, column=0, padx=10, pady=20, sticky="nsew")
+        self.entry.grid(row=6, column=0, columnspan=2, padx=10, pady=20, sticky="nsew")
 
         self.send_button = tk.Button(self.master, text="Send", command=self.send_input, bg="#3498DB", fg="white", font=("Helvetica", 12, "bold"))
-        self.send_button.grid(row=6, column=1, padx=10, sticky="nsew")
+        self.send_button.grid(row=6, column=2, padx=10, sticky="nsew")
 
         self.reset_button = tk.Button(self.master, text="Reset", command=self.reset_game, bg="#27AE60", fg="white", font=("Helvetica", 12, "bold"))
-        self.reset_button.grid(row=7, column=0, pady=10, sticky="nsew")
+        self.reset_button.grid(row=7, column=0, columnspan=2, pady=10, sticky="nsew")
 
         self.quit_button = tk.Button(self.master, text="Quit", command=self.quit_game, bg="#E74C3C", fg="white", font=("Helvetica", 12, "bold"))
-        self.quit_button.grid(row=7, column=1, pady=10, sticky="nsew")
+        self.quit_button.grid(row=7, column=2, pady=10, sticky="nsew")
 
         self.client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.client_socket.connect(("127.0.0.1", 9999))
