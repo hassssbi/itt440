@@ -14,35 +14,35 @@ class HangmanClient:
         self.current_stage = 0
 
         self.banner_label = tk.Label(self.master, bg="#2C3E50", font=("Helvetica", 24, "bold"))
-        self.banner_label.grid(row=0, column=0, columnspan=3, pady=10)
+        self.banner_label.grid(row=0, column=0, columnspan=3, pady=10, sticky="nsew")
 
         self.image_label = tk.Label(self.master, bg="#2C3E50")
-        self.image_label.grid(row=1, column=0, columnspan=3, pady=20)
+        self.image_label.grid(row=1, column=0, columnspan=3, pady=20, sticky="nsew")
         self.update_hangman_image()
 
         self.message_label = tk.Label(self.master, text="Connecting to the server...", fg="white", bg="#2C3E50", font=("Helvetica", 14))
-        self.message_label.grid(row=2, column=0, columnspan=3, pady=10)
+        self.message_label.grid(row=2, column=0, columnspan=3, pady=10, sticky="nsew")
 
         self.word_label = tk.Label(self.master, text="Word: ", fg="white", bg="#2C3E50", font=("Helvetica", 16))
-        self.word_label.grid(row=3, column=0, columnspan=3, pady=5)
+        self.word_label.grid(row=3, column=0, columnspan=3, pady=5, sticky="nsew")
 
         self.guess_label = tk.Label(self.master, text="Guessed Letters: ", fg="white", bg="#2C3E50", font=("Helvetica", 14))
-        self.guess_label.grid(row=4, column=0, columnspan=3, pady=5)
+        self.guess_label.grid(row=4, column=0, columnspan=3, pady=5, sticky="nsew")
 
         self.attempts_label = tk.Label(self.master, text="Attempts Left: ", fg="#E74C3C", bg="#2C3E50", font=("Helvetica", 14, "bold"))
-        self.attempts_label.grid(row=5, column=0, columnspan=3, pady=5)
+        self.attempts_label.grid(row=5, column=0, columnspan=3, pady=5, sticky="nsew")
 
         self.entry = tk.Entry(self.master, font=("Helvetica", 14))
-        self.entry.grid(row=6, column=0, padx=10, pady=20, sticky="ew")
+        self.entry.grid(row=6, column=0, padx=10, pady=20, sticky="nsew")
 
         self.send_button = tk.Button(self.master, text="Send", command=self.send_input, bg="#3498DB", fg="white", font=("Helvetica", 12, "bold"))
-        self.send_button.grid(row=6, column=1, padx=10, sticky="ew")
+        self.send_button.grid(row=6, column=1, padx=10, sticky="nsew")
 
         self.reset_button = tk.Button(self.master, text="Reset", command=self.reset_game, bg="#27AE60", fg="white", font=("Helvetica", 12, "bold"))
-        self.reset_button.grid(row=7, column=0, pady=10, sticky="ew")
+        self.reset_button.grid(row=7, column=0, pady=10, sticky="nsew")
 
         self.quit_button = tk.Button(self.master, text="Quit", command=self.quit_game, bg="#E74C3C", fg="white", font=("Helvetica", 12, "bold"))
-        self.quit_button.grid(row=7, column=1, pady=10, sticky="ew")
+        self.quit_button.grid(row=7, column=1, pady=10, sticky="nsew")
 
         self.client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.client_socket.connect(("127.0.0.1", 9999))
@@ -50,6 +50,11 @@ class HangmanClient:
         self.input_mode = "start"
 
         threading.Thread(target=self.receive_messages).start()
+
+        # Configure grid to expand
+        self.master.columnconfigure(0, weight=1)
+        self.master.columnconfigure(1, weight=1)
+        self.master.columnconfigure(2, weight=1)
 
     def send_input(self):
         input_text = self.entry.get().strip().lower()
