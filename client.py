@@ -148,9 +148,14 @@ class HangmanClient:
         self.image_label.config(image=self.hangman_stages[self.current_stage])
 
     def display_end_game_banner(self, message):
+        player = ""
         # Display end game banner based on the message
         if "wins!" in message:
-            self.banner_label.config(text="YOU'VE WON!", bg="green", fg="white")
+            if "Player2" in message:
+                player = "Player2"
+            else:
+                player = "Player1"
+            self.banner_label.config(text=player + " WON!", bg="green", fg="white")
         else:
             self.banner_label.config(text="GAME OVER!", bg="red", fg="white")
 
