@@ -2,6 +2,7 @@ import socket
 import threading
 import tkinter as tk
 from tkinter import simpledialog, PhotoImage
+import pygame  # Importing pygame for sound effects
 
 class HangmanClient:
     def __init__(self, master):
@@ -9,6 +10,17 @@ class HangmanClient:
         self.master.title("Hangman Client")
         self.master.geometry("500x600")
         self.master.config(bg="#2C3E50")
+
+        # Initialize pygame mixer
+        pygame.mixer.init()
+
+        # Load sound effects
+        self.correct_sound = pygame.mixer.Sound("correct.wav")
+        self.incorrect_sound = pygame.mixer.Sound("incorrect.wav")
+        self.bg_music = pygame.mixer.Sound("background_music.mp3")
+
+        # Play background music
+        self.bg_music.play(-1)  # Loop indefinitely
 
         self.hangman_stages = [PhotoImage(file=f"{i}.png") for i in range(7)]
         self.current_stage = 0
@@ -61,13 +73,17 @@ class HangmanClient:
         self.entry.delete(0, tk.END)
 
         if input_text:
-            self.client_socket.send(input_text.encode())
-            if self.input_mode == "start":
-                self.message_label.config(text="Waiting for Player1 to set the word...")
-            elif self.input_mode == "word":
-                self.message_label.config(text="Waiting for Player2 to guess...")
-            elif self.input_mode == "guess":
-                self.message_label.config(text="Waiting for response...")
+            if self.input_mode == "guess":
+                if len(input_text) == 1 and input_text.isalpha():
+                    self.client_socket.send(input_text.encode())
+                    self.entry.config(state=tk.DISABLED)
+                    self.send_button.config(state=tk.DISABLED)
+                else:
+                    self.message_label.config(text="Please enter only one alphabet.")
+            else:
+                self.client_socket.send(input_text.encode())
+                self.entry.config(state=tk.DISABLED)
+                self.send_button.config(state=tk.DISABLED)
 
     def receive_messages(self):
         while True:
@@ -84,12 +100,18 @@ class HangmanClient:
             self.input_mode = "start"
             self.message_label.config(text=message)
             self.banner_label.config(text="", bg="#2C3E50")
+            self.entry.config(state=tk.NORMAL)
+            self.send_button.config(state=tk.NORMAL)
         elif "Enter a word" in message:
             self.input_mode = "word"
             self.message_label.config(text=message)
+            self.entry.config(state=tk.NORMAL)
+            self.send_button.config(state=tk.NORMAL)
         elif "Enter your guess" in message:
             self.input_mode = "guess"
             self.message_label.config(text=message)
+            self.entry.config(state=tk.NORMAL)
+            self.send_button.config(state=tk.NORMAL)
         elif message.strip() == "reset":
             self.reset_game_state()
         else:
@@ -104,13 +126,20 @@ class HangmanClient:
                 self.guess_label.config(text=f"Guessed Letters: {guessed_letters}")
                 self.update_hangman_image(attempts)
 
+                if attempts < 6:
+                    self.incorrect_sound.play()
+
             if "wins!" in message or "Game over!" in message:
                 self.message_label.config(text=message)
                 self.entry.config(state=tk.DISABLED)
                 self.send_button.config(state=tk.DISABLED)
                 self.display_end_game_banner(message)
+                if "wins!" in message:
+                    self.correct_sound.play()
             else:
                 self.message_label.config(text=message)
+                self.entry.config(state=tk.NORMAL)
+                self.send_button.config(state=tk.NORMAL)
 
     def update_hangman_image(self, attempts=0):
         self.current_stage = 6 - attempts  # Assuming 6 attempts max
