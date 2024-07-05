@@ -150,9 +150,6 @@ class HangmanClient:
                 self.guess_label.config(text=f"Guessed Letters: {guessed_letters}")
                 self.update_hangman_image(attempts)  # Update hangman image based on attempts left
 
-                if attempts < 6:
-                    self.incorrect_sound.play()
-
             if "wins!" in message or "Game over!" in message:
                 # If game ends (win or lose)
                 self.message_label.config(text=message)
@@ -179,6 +176,10 @@ class HangmanClient:
             else:
                 player = "Player1"
             self.banner_label.config(text=player + " WON!", bg="green", fg="white")
+            if player == "Player1":
+                self.correct_sound.play()
+            else:
+                self.incorrect_sound.play()
         else:
             self.banner_label.config(text="GAME OVER!", bg="red", fg="white")
 
