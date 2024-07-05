@@ -63,10 +63,6 @@ class HangmanClient:
         self.send_button = tk.Button(self.master, text="Send", command=self.send_input, bg="#3498DB", fg="white", font=("Helvetica", 12, "bold"))
         self.send_button.grid(row=6, column=2, padx=10, sticky="nsew")
 
-        # Button to reset the game
-        self.reset_button = tk.Button(self.master, text="Reset", command=self.reset_game, bg="#27AE60", fg="white", font=("Helvetica", 12, "bold"))
-        self.reset_button.grid(row=7, column=0, columnspan=2, pady=10, sticky="nsew")
-
         # Button to quit the game
         self.quit_button = tk.Button(self.master, text="Quit", command=self.quit_game, bg="#E74C3C", fg="white", font=("Helvetica", 12, "bold"))
         self.quit_button.grid(row=7, column=2, pady=10, sticky="nsew")
